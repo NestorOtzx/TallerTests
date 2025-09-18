@@ -13,9 +13,9 @@ def readPositiveFloat(prompt):
 def readShippingType(prompt):
     while True:
         value = input(prompt).strip().lower()
-        if value in ["estándar", "standard", "exprés", "expres", "express"]:
+        if 's' == value[0] or 'e' == value[0]:
             return value
-        print("Error: Shipping type must be 'estándar' or 'exprés'.")
+        raise ValueError("Error: Shipping type must be 'standard' or 'expres'.")
 
 if __name__ == "__main__":
     try:

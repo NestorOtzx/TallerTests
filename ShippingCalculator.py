@@ -16,17 +16,6 @@ class ShippingCalculator:
         self.height = height
         self.distance = distance
         self.shippingType = shippingType.lower()
-        self._validateInputs()
-
-    def _validateInputs(self):
-        if self.weight <= 0:
-            raise ValueError("Weight must be a positive number.")
-        if self.length <= 0 or self.width <= 0 or self.height <= 0:
-            raise ValueError("Dimensions must be positive numbers.")
-        if self.distance <= 0:
-            raise ValueError("Distance must be a positive number.")
-        if self.shippingType not in ["estándar", "standard", "exprés", "expres", "express"]:
-            raise ValueError("Shipping type must be 'estándar' or 'exprés'.")
 
     def _calculateWeightCost(self):
         cost = self.weight * self.WEIGHT_COST_BY_KILOGRAM
@@ -36,7 +25,10 @@ class ShippingCalculator:
 
     def _calculateVolumeCost(self):
         volume = self.length * self.width * self.height
-        return self.VOLUME_LIMIT_SURCHARGE if volume > self.VOLUME_LIMIT else 0
+        if volume > self.VOLUME_LIMIT:
+            return self.VOLUME_LIMIT_SURCHARGE
+        else:
+            return 0
 
     def _calculateDistanceCost(self):
         if self.distance > self.DISTANCE_LIMIT:
@@ -49,8 +41,7 @@ class ShippingCalculator:
         totalCost += self._calculateWeightCost()
         totalCost += self._calculateVolumeCost()
         totalCost += self._calculateDistanceCost()
-
-        if self.shippingType in ["exprés", "expres", "express"]:
+        if self.shippingType[0] == 'e':
             totalCost *= self.EXPRESS_MULTIPLIER
 
         return int(totalCost)
